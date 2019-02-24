@@ -1,16 +1,17 @@
-const canvasHeight = 900;
+const canvasHeight = 400;
 const canvasWidth = 1.1 * canvasHeight;
 var middle = {
 	x: -0.5,
 	y: 0
 };
-var zoom = canvasHeight / 3;
+const zoom = canvasHeight / 3;
 const checkingLimit = 720;
 
 var canvas = document.getElementById('canvas');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
+//zooming functunality 
 canvas.addEventListener('click', function (event) {
 	var xMin = middle.x - ((canvasWidth / 2) / zoom);
 	var yMin = middle.y - ((canvasHeight / 2) / zoom);
@@ -21,12 +22,14 @@ canvas.addEventListener('click', function (event) {
 		y: yMin + event.y * pxDelta
 	}
 	zoom *= 4
-	LoopPixels();
+
+	DrawSet();
 }, false);
 
 var ctx = canvas.getContext('2d');
 
-function LoopPixels() {
+//loops over everypixel in the canvas and colors it according to the mandelbrot set
+function DrawSet() {
 	var xMin = middle.x - ((canvasWidth / 2) / zoom);
 	var xMax = middle.x + ((canvasWidth / 2) / zoom);
 	var yMin = middle.y - ((canvasHeight / 2) / zoom);
@@ -39,20 +42,18 @@ function LoopPixels() {
 				x: (xMin + pxDelta * cvW),
 				y: (yMin + pxDelta * cvH)
 			}
-			//console.log(currentCoord.x,currentCoord.y,MandelbrotOperation(currentCoord))
-			//ctx.fillStyle=colors[MandelbrotOperation(currentCoord)];
-
 			if (MandelbrotOperation(currentCoord) == checkingLimit) {
-				ctx.fillStyle = 'hsl(' + MandelbrotOperation(currentCoord) + ',100%,0%)';
+				ctx.fillStyle = 'hsl(' + MandelbrotOperation(currentCoord) + ',100%,0%)'; //draw pixel outside set
 			} else {
-				ctx.fillStyle = 'hsl(' + MandelbrotOperation(currentCoord) + ',100%,50%)';
+				ctx.fillStyle = 'hsl(' + MandelbrotOperation(currentCoord) + ',100%,50%)'; //draw pixel inside set
 			}
 
-			ctx.fillRect(cvW, cvH, 1, 1)
+			ctx.fillRect(cvW, cvH, 1, 1) //draw said pixel
 		}
 	}
 }
 
+// (x,y) => when that coordinate diverges (or checkingLimit if it doesnt within that limit)
 function MandelbrotOperation(coord) {
 	var originalCoord = coord;
 	coord = {
@@ -78,4 +79,4 @@ function isBound(num) {
 	return (dist < 2);
 }
 
-LoopPixels();
+DrawSet();
