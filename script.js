@@ -4,7 +4,7 @@ var middle = {
 	x: -0.5,
 	y: 0
 };
-const zoom = canvasHeight / 3;
+var zoom = canvasHeight / 3;
 const checkingLimit = 720;
 
 var canvas = document.getElementById('canvas');
